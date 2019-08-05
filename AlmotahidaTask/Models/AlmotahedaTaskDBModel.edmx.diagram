@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a72eb8884c404b69905930b562f1c31d" Name="Diagram1">
+        <EntityTypeShape EntityType="AlmotahedaTaskDBModel.tblCustomer" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AlmotahedaTaskDBModel.tblItem" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AlmotahedaTaskDBModel.tblSalesDetail" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="AlmotahedaTaskDBModel.tblSalesHeader" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="AlmotahedaTaskDBModel.FK_tblCustomer" ManuallyRouted="false" />
+        <AssociationConnector Association="AlmotahedaTaskDBModel.FK__tblSalesD__tblIt__6E01572D" ManuallyRouted="false" />
+        <AssociationConnector Association="AlmotahedaTaskDBModel.FK__tblSalesD__tblSa__6EF57B66" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
