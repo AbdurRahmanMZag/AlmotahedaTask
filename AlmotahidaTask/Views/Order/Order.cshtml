@@ -1,0 +1,78 @@
+﻿@model AlmotahidaTask.Models.SalesDetailViewModel
+
+@{
+  ViewBag.Title = "Order";
+}
+
+
+<style>
+  table, th, td {
+      border: 1px solid black;
+  }
+</style>
+<h3>Order Details</h3>
+<hr />
+<div>
+    <b>Order Details</b>
+    <table>
+        <tr>
+            <td>
+                Serial<br />
+                <b>@Model._tblSalesHeader.gISerial</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Customer<br />
+                <b>@Model._tblSalesHeader.tblCustomer1.Name</b>
+            </td>
+        </tr>
+
+    </table>
+    <br />
+    <table>
+        <tr>
+            <td>
+                <b>Item Code</b>
+            </td>
+            <td>
+                <b>Item Name</b>
+            </td>
+            <td>
+                <b>Qty</b>
+            </td>
+            <td>
+                <b>Price</b>
+            </td>
+            <td>
+                <b>SubTotal</b>
+            </td>
+        </tr>
+        @foreach(var item in Model._tblSalesDetail)
+        {
+        <tr>
+            <td>
+                @item.tblItem1.Code
+            </td>
+            <td>
+                @item.tblItem1.Name
+            </td>
+            <td>
+                @item.Qty
+            </td>
+            <td>
+                @item.Price
+            </td>
+            <td>
+                @item.SubTotal
+            </td>
+        </tr>
+        }    
+    </table>
+   
+    <dl class="dl-horizontal"></dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
