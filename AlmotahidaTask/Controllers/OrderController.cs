@@ -9,11 +9,6 @@ namespace AlmotahidaTask.Controllers
 {
   public class OrderController : Controller
   {
-    // GET: Order
-    public ActionResult Index()
-    {
-      return View();
-    }
 
     // GET: Order/Details/5
     public ActionResult Order(int? id)
@@ -31,26 +26,39 @@ namespace AlmotahidaTask.Controllers
       return View(model);
     }
 
-    // GET: Order/Create
-    public ActionResult Create()
-    {
-      var model = new SalesDetailViewModel();
-      return View(model);
-    }
-
     // POST: Order/Create
     [HttpPost]
-    public ActionResult Create(FormCollection collection)
+    public JsonResult InsertOrders(SalesDetailViewModel order ,int? id )
     {
-      try
+      tblSalesHeader salesHeader = order._tblSalesHeader;
+      List<tblSalesDetail> salesDetails = order._tblSalesDetail;
+      //var db = new AlmotahedaTaskDBEntities();
+      //tblSalesHeader salesHeaderEntities = db.tblSalesHeaders.SingleOrDefault(s => s.gISerial == id);
+      using(AlmotahedaTaskDBEntities entities = new AlmotahedaTaskDBEntities())
       {
-        // TODO: Add insert logic here
 
-        return RedirectToAction("Index");
-      }
-      catch
-      {
-        return View();
+
+        //Truncate Table to delete all old records.
+        entities.Database.ExecuteSqlCommand(@"TRUNCATE TABLE [tblSalesHeader];
+         TRUNCATE TABLE [tblSalesDetail");
+        if(salesHeader == null)
+        {
+          salesHeader = new tblSalesHeader();
+        }
+        entities.tblSalesHeaders.Add(salesHeader);
+        entities.SaveChanges();
+        if(salesDetails == null)
+        {
+          salesDetails = new List<tblSalesDetail>();
+        }
+        //loop and insert records.
+        foreach(tblSalesDetail salesDetail in salesDetails)
+        {
+          entities.tblSalesDetails.Add(salesDetail);
+        }
+        int insertedRecords = entities.SaveChanges();
+        
+        return Json(insertedRecords);
       }
     }
 
