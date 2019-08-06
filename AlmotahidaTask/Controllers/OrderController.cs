@@ -26,7 +26,7 @@ namespace AlmotahidaTask.Controllers
       return View(model);
     }
 
-    // POST: Order/Create
+    // POST: Order/InsertOrders
     [HttpPost]
     public JsonResult InsertOrders(SalesDetailViewModel order ,int? id )
     {

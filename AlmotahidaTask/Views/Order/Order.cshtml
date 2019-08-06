@@ -2,6 +2,7 @@
 
 @{
   ViewBag.Title = "Order";
+  Layout = null;
 }
 
 
@@ -14,65 +15,157 @@
 <hr />
 <div>
     <b>Order Details</b>
-    <table>
+    <table align="center" style="width:40%;">
         <tr>
             <td>
-                Serial<br />
+                Serial
+            </td>
+            <td>
                 <b>@Model._tblSalesHeader.gISerial</b>
             </td>
         </tr>
         <tr>
             <td>
-                Customer<br />
+                Customer
+            </td>
+            <td>
                 <b>@Model._tblSalesHeader.tblCustomer1.Name</b>
             </td>
         </tr>
 
     </table>
-    <br />
-    <table>
+</div>
+<br />
+
+<table id="tblOrders" class="table" cellpadding="0" cellspacing="0">
+    <thead>
         <tr>
-            <td>
-                <b>Item Code</b>
-            </td>
-            <td>
-                <b>Item Name</b>
-            </td>
-            <td>
-                <b>Qty</b>
-            </td>
-            <td>
-                <b>Price</b>
-            </td>
-            <td>
-                <b>SubTotal</b>
-            </td>
+            <th style="width:150px">Item Code</th>
+            <th style="width:150px">Item Name</th>
+            <th style="width:150px">Qty</th>
+            <th style="width:150px">Price</th>
+            <th style="width:150px">SubTotal</th>
+
+            <th></th>
         </tr>
+    </thead>
+    <tbody>
         @foreach(var item in Model._tblSalesDetail)
         {
         <tr>
-            <td>
-                @item.tblItem1.Code
-            </td>
-            <td>
-                @item.tblItem1.Name
-            </td>
-            <td>
-                @item.Qty
-            </td>
-            <td>
-                @item.Price
-            </td>
-            <td>
-                @item.SubTotal
-            </td>
+            <td>@item.tblItem1.Code</td>
+            <td>@item.tblItem1.Name</td>
+            <td>@item.Qty</td>
+            <td>@item.Price</td>
+            <td>@item.SubTotal</td>
+
+            <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
         </tr>
-        }    
-    </table>
-   
-    <dl class="dl-horizontal"></dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td><input type="text" id="txtCode" /></td>
+            <td><input type="text" id="txtName" /></td>
+            <td><input type="number" id="numQty" /></td>
+            <td><input type="number" id="numPrice" /></td>
+            <td><input type="number" id="numTotal" /></td>
+
+            <td><input type="button" id="btnAdd" value="Add" /></td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+<input type="button" id="btnSave" value="Save All" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+<script type="text/javascript">
+    $("body").on("click", "#btnAdd", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtCode = $("#txtCode");
+        var txtName = $("#txtName");
+        var numQty = $("#numQty");
+        var numPrice = $("#numPrice");
+        var numTotal = $("#numTotal");
+
+        //Get the reference of the Table's TBODY element.
+        var tBody = $("#tblOrders > TBODY")[0];
+
+        //Add Row.
+        var row = tBody.insertRow(-1);
+
+        //Add Code cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtCode.val());
+
+        //Add ItemName cell.
+        cell = $(row.insertCell(-1));
+        cell.html(txtName.val());
+
+        //Add Qty cell.
+        cell = $(row.insertCell(-1));
+        cell.html(numQty.val());
+
+        //Add Price cell.
+        cell = $(row.insertCell(-1));
+        cell.html(numPrice.val());
+
+        //Add SubTotal cell.
+        cell = $(row.insertCell(-1));
+        cell.html(numTotal.val());
+
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr("onclick", "Remove(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+
+        //Clear the TextBoxes.
+        txtCode.val("");
+        txtName.val("");
+        numQty.val("");
+        numPrice.val("");
+    });
+
+    function Remove(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        if (confirm("Do you want to delete: " + name)) {
+            //Get the reference of the Table.
+            var table = $("#tblOrders")[0];
+
+            //Delete the Table row using it's Index.
+            table.deleteRow(row[0].rowIndex);
+        }
+    };
+
+    $("body").on("click", "#btnSave", function () {
+        //Loop through the Table rows and build a JSON array.
+        var orders = new Array();
+        $("#tblOrders TBODY TR").each(function () {
+            var row = $(this);
+            var order = {};
+            order.Code = row.find("TD").eq(0).html();
+            order.Name = row.find("TD").eq(1).html();
+            order.Qty = row.find("TD").eq(2).html();
+            order.Price = row.find("TD").eq(3).html();
+
+            orders.push(order);
+        });
+
+        //Send the JSON array to Controller using AJAX.
+        $.ajax({
+            type: "POST",
+            url: "/Order/InsertOrders",
+            data: JSON.stringify(orders),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+                alert(r + " record(s) inserted.");
+            }
+        });
+    });
+</script>
